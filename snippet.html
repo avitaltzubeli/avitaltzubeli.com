@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Watch — Avital Tzubeli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #1c0a06;
+      font-family: 'Montserrat', sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .wordmark {
+      font-family: 'Playfair Display', serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      margin-bottom: 48px;
+      opacity: 0.85;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+    }
+
+    /* Thumbnail / player */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #000;
+    }
+
+    .thumbnail {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease, opacity 0.3s ease;
+    }
+
+    .video-wrap:hover .thumbnail {
+      transform: scale(1.03);
+      opacity: 0.85;
+    }
+
+    /* Dark overlay */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.25);
+      transition: background 0.3s ease;
+    }
+    .video-wrap:hover .overlay {
+      background: rgba(0,0,0,0.35);
+    }
+
+    /* Play button */
+    .play-btn {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.25s ease, background 0.25s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .video-wrap:hover .play-btn {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: #fff;
+    }
+    .play-btn svg {
+      margin-left: 5px; /* optical center for triangle */
+    }
+
+    /* Iframe (hidden until clicked) */
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      border: none;
+      display: none;
+    }
+
+    .caption {
+      margin-top: 20px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.45);
+      text-align: center;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="wordmark" href="index.html">Avital Tzubeli</a>
+
+  <div class="container">
+    <div class="video-wrap" id="videoWrap">
+      <img class="thumbnail" id="thumb" src="" alt="Watch Avital Tzubeli">
+      <div class="overlay"></div>
+      <div class="play-btn">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#1c0a06">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
+      </div>
+      <iframe
+        id="player"
+        src=""
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+
+  <script>
+    const VIDEO_ID = '1219619879';
+
+    // Fetch thumbnail from Vimeo oEmbed API
+    fetch('https://vimeo.com/api/oembed.json?url=https://vimeo.com/' + VIDEO_ID + '&width=1280')
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('thumb').src = data.thumbnail_url;
+      })
+      .catch(() => {
+        // Fallback: use Vimeo's direct thumbnail URL pattern
+        document.getElementById('thumb').src =
+          'https://vumbnail.com/' + VIDEO_ID + '.jpg';
+      });
+
+    document.getElementById('videoWrap').addEventListener('click', function () {
+      const player = document.getElementById('player');
+      const thumb = document.getElementById('thumb');
+      const overlay = this.querySelector('.overlay');
+      const playBtn = this.querySelector('.play-btn');
+
+      player.src = 'https://player.vimeo.com/video/' + VIDEO_ID +
+        '?badge=0&title=0&byline=0&portrait=0&autoplay=1&dnt=1&player_id=0&app_id=58479';
+      player.style.display = 'block';
+      thumb.style.display = 'none';
+      overlay.style.display = 'none';
+      playBtn.style.display = 'none';
+    });
+  </script>
+
+</body>
+</html>
